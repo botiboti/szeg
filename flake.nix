@@ -16,15 +16,15 @@
         craneLib = crane.lib.${system};
         watch = pkgs.writeShellApplication {
           name = "watch";
-          runtimeInputs = self.packages.${system}.szeg.nativeBuildInputs;
+          runtimeInputs = self.packages.${system}.szeg-server.nativeBuildInputs;
           text = ''
             cargo run #watch -x run
           '';
         };
       in with pkgs; {
         packages = {
-          default = self.packages.${system}.szeg;
-          szeg = craneLib.buildPackage {
+          default = self.packages.${system}.szeg-server;
+          szeg-server = craneLib.buildPackage {
             src = craneLib.cleanCargoSource (craneLib.path ./.);
 
             # Add extra inputs here or any other derivation settings
@@ -34,7 +34,9 @@
           };
           szeg-model = pkgs.runCommandNoCC "szeg-model" { } ''
             mkdir -p $out/gen
-            ${self.packages.${system}.szeg}/bin/szeg-model > $out/gen/Model.elm
+            ${
+              self.packages.${system}.szeg-server
+            }/bin/szeg-model > $out/gen/Model.elm
           '';
           szeg-frontend = pkgs.mkElmDerivation {
             name = "szeg-frontend";
@@ -50,7 +52,7 @@
           };
         };
         devShells.default = mkShell {
-          inputsFrom = [ self.packages.${system}.szeg ];
+          inputsFrom = [ self.packages.${system}.szeg-server ];
           buildInputs = [ pkgs.elmPackages.elm ];
           shellHook = ''
             set -a
@@ -67,10 +69,10 @@
           '';
         };
         apps = {
-          default = self.apps.${system}.szeg;
-          szeg = {
+          default = self.apps.${system}.szeg-server;
+          szeg-server = {
             type = "app";
-            program = "${self.packages.${system}.szeg}/bin/szeg";
+            program = "${self.packages.${system}.szeg-server}/bin/szeg-server";
           };
           watch = {
             type = "app";

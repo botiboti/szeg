@@ -1,9 +1,9 @@
 [package]
-name = "szeg"
+name = "szeg-server"
 version = "0.1.0"
 edition = "2021"
 publish = false
-default-run = "szeg-ws"
+default-run = "szeg-server"
 
 [dependencies]
 axum = { version = "0.6", features = ["ws", "headers"] }
@@ -20,7 +20,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 [[bin]]
-name = "szeg-ws"
+name = "szeg-server"
 path = "src/main.rs"
 
 [[bin]]
