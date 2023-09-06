@@ -1,3 +1,6 @@
 ./creds.env
 /target
 /result*
+/out/
+/gen/
+/elm-stuff/
